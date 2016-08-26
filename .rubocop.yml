@@ -26,6 +26,9 @@ Metrics/LineLength:
 Metrics/ParameterLists:
   CountKeywordArgs: false
 
+RSpec/ExampleLength:
+  Max: 11
+
 Style/AccessorMethodName:
   Exclude:
     - 'lib/reek/context/visibility_tracker.rb'
