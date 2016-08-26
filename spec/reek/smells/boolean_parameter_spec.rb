@@ -40,14 +40,16 @@ RSpec.describe Reek::Smells::BooleanParameter do
 
     it 'reports two parameters defaulted to booleans in a mixed parameter list' do
       src = 'def cc(nowt, arga = true, argb = false, &blk) end'
-      expect(src).to reek_of(:BooleanParameter, parameter: 'arga')
-      expect(src).to reek_of(:BooleanParameter, parameter: 'argb')
+      expect(src).
+        to reek_of(:BooleanParameter, parameter: 'arga').
+        and reek_of(:BooleanParameter, parameter: 'argb')
     end
 
     it 'reports keyword parameters defaulted to booleans' do
       src = 'def cc(arga: true, argb: false) end'
-      expect(src).to reek_of(:BooleanParameter, parameter: 'arga')
-      expect(src).to reek_of(:BooleanParameter, parameter: 'argb')
+      expect(src).
+        to reek_of(:BooleanParameter, parameter: 'arga').
+        and reek_of(:BooleanParameter, parameter: 'argb')
     end
 
     it 'does not report regular parameters' do
@@ -84,8 +86,9 @@ RSpec.describe Reek::Smells::BooleanParameter do
 
     it 'reports two parameters defaulted to booleans' do
       src = 'def Module.cc(nowt, arga = true, argb = false, &blk) end'
-      expect(src).to reek_of(:BooleanParameter, parameter: 'arga')
-      expect(src).to reek_of(:BooleanParameter, parameter: 'argb')
+      expect(src).
+        to reek_of(:BooleanParameter, parameter: 'arga').
+        and reek_of(:BooleanParameter, parameter: 'argb')
     end
   end
 end
