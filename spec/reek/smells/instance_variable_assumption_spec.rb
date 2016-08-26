@@ -34,19 +34,12 @@ RSpec.describe Reek::Smells::InstanceVariableAssumption do
 
     EOS
 
-    expect(src).to reek_of(:InstanceVariableAssumption,
-                           lines: [1],
-                           assumption: :@a)
-    expect(src).to reek_of(:InstanceVariableAssumption,
-                           lines: [1],
-                           assumption: :@b)
+    expect(src).
+      to reek_of(:InstanceVariableAssumption, lines: [1], assumption: :@a).
+      and reek_of(:InstanceVariableAssumption, lines: [1], assumption: :@b)
   end
 
-  it 'should report each ivar once' do
-    message_a = 'assumes too much for instance variable @a'
-    message_b = 'assumes too much for instance variable @b'
-    message_c = 'assumes too much for instance variable @c'
-
+  it 'reports each ivar separately' do
     src = <<-EOS
       class Dummy
         def test
@@ -59,12 +52,13 @@ RSpec.describe Reek::Smells::InstanceVariableAssumption do
       end
     EOS
 
-    expect(src).to reek_of(:InstanceVariableAssumption, message: message_a)
-    expect(src).to reek_of(:InstanceVariableAssumption, message: message_b)
-    expect(src).to reek_of(:InstanceVariableAssumption, message: message_c)
+    expect(src).
+      to reek_of(:InstanceVariableAssumption, assumption: :@a).
+      and reek_of(:InstanceVariableAssumption, assumption: :@b).
+      and reek_of(:InstanceVariableAssumption, assumption: :@c)
   end
 
-  it 'should not report an empty class' do
+  it 'does not report an empty class' do
     src = <<-EOS
       class Dummy
       end
@@ -73,7 +67,7 @@ RSpec.describe Reek::Smells::InstanceVariableAssumption do
     expect(src).not_to reek_of(:InstanceVariableAssumption)
   end
 
-  it 'should not report when lazy initializing' do
+  it 'does not report when lazy initializing' do
     src = <<-EOS
       class Dummy
         def test
@@ -85,7 +79,7 @@ RSpec.describe Reek::Smells::InstanceVariableAssumption do
     expect(src).not_to reek_of(:InstanceVariableAssumption)
   end
 
-  it 'should report when making instance variable assumption' do
+  it 'reports when making instance variable assumption' do
     src = <<-EOS
       class Dummy
         def test
@@ -114,7 +108,7 @@ RSpec.describe Reek::Smells::InstanceVariableAssumption do
   end
 
   context 'inner classes' do
-    it 'should report outter class' do
+    it 'reports outer class' do
       src = <<-EOS
         class Dummy
           def test
@@ -129,7 +123,7 @@ RSpec.describe Reek::Smells::InstanceVariableAssumption do
       expect(src).to reek_of(:InstanceVariableAssumption, context: 'Dummy')
     end
 
-    it 'should report even if outer class initialize the variable' do
+    it 'reports inner class even if outer class initializes the variable' do
       src = <<-EOS
         class Dummy
           def initialize
@@ -147,13 +141,9 @@ RSpec.describe Reek::Smells::InstanceVariableAssumption do
       expect(src).to reek_of(:InstanceVariableAssumption, context: 'Dummy::Dummiest')
     end
 
-    it 'should report inner classes' do
+    it 'reports inner classes' do
       src = <<-EOS
         class Dummy
-          def initialize
-            @a = 1
-          end
-
           class Dummiest
             def initialize
               @b = 1
