@@ -27,7 +27,7 @@ Metrics/ParameterLists:
   CountKeywordArgs: false
 
 RSpec/ExampleLength:
-  Max: 13
+  Max: 14
 
 Style/AccessorMethodName:
   Exclude:
