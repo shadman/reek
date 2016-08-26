@@ -1,6 +1,8 @@
 require_relative '../../spec_helper'
 require_lib 'reek/smells/feature_envy'
 
+RSpec::Matchers.define_negated_matcher :not_reek_of, :reek_of
+
 RSpec.describe Reek::Smells::FeatureEnvy do
   it 'reports the right values' do
     src = <<-EOS
@@ -32,63 +34,126 @@ RSpec.describe Reek::Smells::FeatureEnvy do
       end
     EOS
 
-    expect(src).to reek_of(:FeatureEnvy,
-                           lines: [3, 3],
-                           name:  'charlie')
-    expect(src).to reek_of(:FeatureEnvy,
-                           lines: [7, 7],
-                           name:  'hotel')
+    expect(src).
+      to reek_of(:FeatureEnvy, lines: [3, 3], name:  'charlie').
+      and reek_of(:FeatureEnvy, lines: [7, 7], name:  'hotel')
   end
 
   context 'with no smell' do
-    it 'should not report use of self' do
-      expect('def simple() self.to_s + self.to_i end').not_to reek_of(:FeatureEnvy)
+    it 'does not report use of self' do
+      src = <<-EOS
+        def simple()
+          self.to_s + self.to_i
+        end
+      EOS
+      expect(src).not_to reek_of(:FeatureEnvy)
     end
 
-    it 'should not report vcall with no argument' do
-      expect('def simple() func; end').not_to reek_of(:FeatureEnvy)
+    it 'does not report vcall with no argument' do
+      src = <<-EOS
+        def simple()
+          func
+        end
+      EOS
+      expect(src).not_to reek_of(:FeatureEnvy)
     end
 
-    it 'should not report single use' do
-      expect('def no_envy(arga) arga.barg(@item) end').not_to reek_of(:FeatureEnvy)
+    it 'does not report single use' do
+      src = <<-EOS
+        def no_envy(arga)
+          arga.barg(@item)
+        end
+      EOS
+      expect(src).not_to reek_of(:FeatureEnvy)
     end
 
-    it 'should not report return value' do
-      expect('def no_envy(arga) arga.barg(@item); arga end').not_to reek_of(:FeatureEnvy)
+    it 'does not report return value' do
+      src = <<-EOS
+        def no_envy(arga)
+          arga.barg(@item)
+          arga
+        end
+      EOS
+      expect(src).not_to reek_of(:FeatureEnvy)
     end
 
-    it 'should ignore global variables' do
-      expect('def no_envy() $s2.to_a; $s2[@item] end').not_to reek_of(:FeatureEnvy)
+    it 'ignores global variables' do
+      src = <<-EOS
+        def no_envy()
+          $s2.to_a
+          $s2[@item]
+        end
+      EOS
+      expect(src).not_to reek_of(:FeatureEnvy)
     end
 
-    it 'should not report class methods' do
-      expect('def simple() self.class.new.flatten_merge(self) end').
+    it 'does not report class methods' do
+      src = <<-EOS
+        def simple()
+          self.class.new.flatten_merge(self)
+        end
+      EOS
+      expect(src).not_to reek_of(:FeatureEnvy)
+    end
+
+    it 'does not report single use of an ivar' do
+      src = <<-EOS
+        def no_envy()
+          @item.to_a
+        end
+      EOS
+      expect(src).not_to reek_of(:FeatureEnvy)
+    end
+
+    it 'does not report returning an ivar' do
+      src = <<-EOS
+        def no_envy()
+          @item.to_a
+          @item
+        end
+      EOS
+      expect(src).not_to reek_of(:FeatureEnvy)
+    end
+
+    it 'does not report ivar usage in a parameter' do
+      src = <<-EOS
+        def no_envy()
+          @item.price + tax(@item) - savings(@item)
+        end
+      EOS
+      expect(src).
         not_to reek_of(:FeatureEnvy)
     end
 
-    it 'should not report single use of an ivar' do
-      expect('def no_envy() @item.to_a end').not_to reek_of(:FeatureEnvy)
+    it 'does not report single use of an lvar' do
+      src = <<-EOS
+        def no_envy()
+          lv = @item
+          lv.to_a
+        end
+      EOS
+      expect(src).not_to reek_of(:FeatureEnvy)
     end
 
-    it 'should not report returning an ivar' do
-      expect('def no_envy() @item.to_a; @item end').not_to reek_of(:FeatureEnvy)
-    end
-
-    it 'should not report ivar usage in a parameter' do
-      expect('def no_envy() @item.price + tax(@item) - savings(@item) end').
-        not_to reek_of(:FeatureEnvy)
-    end
-
-    it 'should not report single use of an lvar' do
-      expect('def no_envy() lv = @item; lv.to_a end').not_to reek_of(:FeatureEnvy)
-    end
-
-    it 'should not report returning an lvar' do
-      expect('def no_envy() lv = @item; lv.to_a; lv end').not_to reek_of(:FeatureEnvy)
+    it 'does not report returning an lvar' do
+      src = <<-EOS
+        def no_envy()
+          lv = @item
+          lv.to_a
+          lv
+        end
+      EOS
+      expect(src).not_to reek_of(:FeatureEnvy)
     end
 
     it 'ignores lvar usage in a parameter' do
-      expect('def no_envy() lv = @item; lv.price + tax(lv) - savings(lv); end').
+      src = <<-EOS
+        def no_envy()
+          lv = @item
+          lv.price + tax(lv) - savings(lv)
+        end
+      EOS
+      expect(src).
         not_to reek_of(:FeatureEnvy)
     end
 
@@ -118,7 +183,7 @@ RSpec.describe Reek::Smells::FeatureEnvy do
     end
   end
 
-  it 'should report highest affinity' do
+  it 'reports highest affinity' do
     src = <<-EOS
       def total_envy
         fred = @item
@@ -129,11 +194,12 @@ RSpec.describe Reek::Smells::FeatureEnvy do
       end
       EOS
 
-    expect(src).to reek_of(:FeatureEnvy, name: 'total')
-    expect(src).not_to reek_of(:FeatureEnvy, name: 'fred')
+    expect(src).
+      to reek_of(:FeatureEnvy, name: 'total').
+      and not_reek_of(:FeatureEnvy, name: 'fred')
   end
 
-  it 'should report multiple affinities' do
+  it 'reports multiple affinities' do
     src = <<-EOS
       def total_envy
         fred = @item
@@ -143,11 +209,12 @@ RSpec.describe Reek::Smells::FeatureEnvy do
       end
       EOS
 
-    expect(src).to reek_of(:FeatureEnvy, name: 'total')
-    expect(src).to reek_of(:FeatureEnvy, name: 'fred')
+    expect(src).
+      to reek_of(:FeatureEnvy, name: 'total').
+      and reek_of(:FeatureEnvy, name: 'fred')
   end
 
-  it 'should not be fooled by duplication' do
+  it 'is not fooled by duplication' do
     src = <<-EOS
       def feed(thing)
         @cow.feed_to(thing.pig)
@@ -158,7 +225,7 @@ RSpec.describe Reek::Smells::FeatureEnvy do
     expect(src).to reek_only_of(:DuplicateMethodCall)
   end
 
-  it 'should count local calls' do
+  it 'counts local calls' do
     src = <<-EOS
       def feed(thing)
         cow.feed_to(thing.pig)
@@ -169,7 +236,7 @@ RSpec.describe Reek::Smells::FeatureEnvy do
     expect(src).to reek_only_of(:DuplicateMethodCall)
   end
 
-  it 'should report many calls to lvar' do
+  it 'reports many calls to lvar' do
     src = <<-EOS
       def envy()
         lv = @item
@@ -181,7 +248,14 @@ RSpec.describe Reek::Smells::FeatureEnvy do
   end
 
   it 'ignores frequent use of a call' do
-    expect('def func() other.a; other.b; nother.c end').not_to reek_of(:FeatureEnvy)
+    src = <<-EOS
+      def func()
+        other.a
+        other.b
+        nother.c
+      end
+    EOS
+    expect(src).not_to reek_of(:FeatureEnvy)
   end
 
   it 'counts =~ as a call' do
