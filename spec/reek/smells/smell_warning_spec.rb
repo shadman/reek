@@ -101,47 +101,44 @@ RSpec.describe Reek::Smells::SmellWarning do
     let(:lines) { [24, 513] }
     let(:message) { 'test message' }
 
-    shared_examples_for 'common fields' do
-      it 'includes the smell type' do
-        expect(yaml['smell_type']).to eq 'FeatureEnvy'
-      end
-      it 'includes the context' do
-        expect(yaml['context']).to eq context_name
-      end
-      it 'includes the message' do
-        expect(yaml['message']).to eq message
-      end
-      it 'includes the line numbers' do
-        expect(yaml['lines']).to match_array lines
-      end
+    let(:detector) { Reek::Smells::FeatureEnvy.new }
+    let(:parameters) { { 'one' => 34, 'two' => 'second' } }
+    let(:smell_type) { 'FeatureEnvy' }
+    let(:source) { 'a/ruby/source/file.rb' }
+    let(:yaml) do
+      warning = described_class.new(detector, source: source,
+                                              context: context_name,
+                                              lines: lines,
+                                              message: message,
+                                              parameters: parameters)
+      warning.yaml_hash
     end
 
-    context 'with all details specified' do
-      let(:detector) { Reek::Smells::FeatureEnvy.new }
-      let(:parameters) { { 'one' => 34, 'two' => 'second' } }
-      let(:smell_type) { 'FeatureEnvy' }
-      let(:source) { 'a/ruby/source/file.rb' }
-      let(:yaml) do
-        warning = described_class.new(detector, source: source,
-                                                context: context_name,
-                                                lines: lines,
-                                                message: message,
-                                                parameters: parameters)
-        warning.yaml_hash
-      end
+    it 'includes the smell type' do
+      expect(yaml['smell_type']).to eq 'FeatureEnvy'
+    end
 
-      it_should_behave_like 'common fields'
+    it 'includes the context' do
+      expect(yaml['context']).to eq context_name
+    end
 
-      it 'includes the smell type' do
-        expect(yaml['smell_type']).to eq smell_type
-      end
-      it 'includes the source' do
-        expect(yaml['source']).to eq source
-      end
-      it 'includes the parameters' do
-        parameters.each do |key, value|
-          expect(yaml[key]).to eq value
-        end
+    it 'includes the message' do
+      expect(yaml['message']).to eq message
+    end
+
+    it 'includes the line numbers' do
+      expect(yaml['lines']).to match_array lines
+    end
+
+    it 'includes the smell type' do
+      expect(yaml['smell_type']).to eq smell_type
+    end
+    it 'includes the source' do
+      expect(yaml['source']).to eq source
+    end
+    it 'includes the parameters' do
+      parameters.each do |key, value|
+        expect(yaml[key]).to eq value
       end
     end
   end
