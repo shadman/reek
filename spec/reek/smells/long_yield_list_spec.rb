@@ -32,12 +32,9 @@ RSpec.describe Reek::Smells::LongYieldList do
       end
     EOS
 
-    expect(src).to reek_of(:LongYieldList,
-                           lines:   [3],
-                           context: 'Dummy#m1')
-    expect(src).to reek_of(:LongYieldList,
-                           lines:   [7],
-                           context: 'Dummy#m2')
+    expect(src).
+      to reek_of(:LongYieldList, lines: [3], context: 'Dummy#m1').
+      and reek_of(:LongYieldList, lines: [7], context: 'Dummy#m2')
   end
 
   it 'does not report yield with no parameters' do
