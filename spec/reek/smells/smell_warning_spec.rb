@@ -12,12 +12,15 @@ RSpec.describe Reek::Smells::SmellWarning do
       it 'hash differently' do
         expect(first.hash).not_to eq(second.hash)
       end
+
       it 'are not equal' do
         expect(first).not_to eq(second)
       end
+
       it 'sort correctly' do
         expect(first <=> second).to be < 0
       end
+
       it 'does not match using eql?' do
         expect(first).not_to eql(second)
         expect(second).not_to eql(first)
