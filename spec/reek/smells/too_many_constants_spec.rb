@@ -18,7 +18,7 @@ RSpec.describe Reek::Smells::TooManyConstants do
   end
 
   context 'counting constants' do
-    it 'should not report for non-excessive constants' do
+    it 'does not report for non-excessive constants' do
       src = <<-EOS
         class Dummy
           A = B = C = D = E = 1
@@ -28,7 +28,7 @@ RSpec.describe Reek::Smells::TooManyConstants do
       expect(src).not_to reek_of(:TooManyConstants)
     end
 
-    it 'should not report when increasing default' do
+    it 'does not report when increasing default' do
       src = <<-EOS
         # :reek:TooManyConstants: { max_constants: 6 }
         class Dummy
@@ -40,7 +40,7 @@ RSpec.describe Reek::Smells::TooManyConstants do
       expect(src).not_to reek_of(:TooManyConstants)
     end
 
-    it 'should not report when disabled' do
+    it 'does not report when disabled' do
       src = <<-EOS
         # :reek:TooManyConstants: { enabled: false }
         class Dummy
@@ -52,7 +52,7 @@ RSpec.describe Reek::Smells::TooManyConstants do
       expect(src).not_to reek_of(:TooManyConstants)
     end
 
-    it 'should not account class definition' do
+    it 'does not account class definition' do
       src = <<-EOS
         module Dummiest
           class Dummy
@@ -66,7 +66,7 @@ RSpec.describe Reek::Smells::TooManyConstants do
       expect(src).not_to reek_of(:TooManyConstants)
     end
 
-    it 'should not account struct definition' do
+    it 'does not account struct definition' do
       src = <<-EOS
         module Dummiest
           class Dummy
@@ -77,10 +77,10 @@ RSpec.describe Reek::Smells::TooManyConstants do
         end
       EOS
 
-      expect(src).to_not reek_of(:TooManyConstants)
+      expect(src).not_to reek_of(:TooManyConstants)
     end
 
-    it 'should count each constant only once' do
+    it 'counts each constant only once' do
       src = <<-EOS
         class Good
           A = B = C = D = E = 1
@@ -98,7 +98,7 @@ RSpec.describe Reek::Smells::TooManyConstants do
       expect(src).not_to reek_of(:TooManyConstants)
     end
 
-    it 'should count each constant only once for each class' do
+    it 'counts each constant only once for each class' do
       src = <<-EOS
         module Movie
           class Good
@@ -118,7 +118,7 @@ RSpec.describe Reek::Smells::TooManyConstants do
       expect(src).not_to reek_of(:TooManyConstants)
     end
 
-    it 'should not report outer module when inner module suppressed' do
+    it 'does not report outer module when inner module suppressed' do
       src = <<-EOS
         module Foo
           # ignore :reek:TooManyConstants:
@@ -136,7 +136,7 @@ RSpec.describe Reek::Smells::TooManyConstants do
       expect(src).not_to reek_of(:TooManyConstants, context: 'Foo')
     end
 
-    it 'should count each constant only once for each namespace' do
+    it 'counts each constant only once for each namespace' do
       src = <<-EOS
         module Movie
           A = B = C = D = E = 1
@@ -150,7 +150,7 @@ RSpec.describe Reek::Smells::TooManyConstants do
       expect(src).not_to reek_of(:TooManyConstants)
     end
 
-    it 'should report for excessive constants inside a class' do
+    it 'reports for excessive constants inside a class' do
       src = <<-EOS
         class Dummy
           A = B = C = D = E = 1
@@ -161,7 +161,7 @@ RSpec.describe Reek::Smells::TooManyConstants do
       expect(src).to reek_of(:TooManyConstants)
     end
 
-    it 'should report for excessive constants inside a module' do
+    it 'reports for excessive constants inside a module' do
       src = <<-EOS
         module Dummiest
           A = B = C = D = E = 1

@@ -47,12 +47,12 @@ RSpec.describe Reek::Smells::UtilityFunction do
     end
 
     context 'by using `module_function`' do
-      it 'should not report UtilityFunction' do
+      it 'does not report UtilityFunction' do
         src = 'class C; def m(a) a.to_s; end; module_function :m; end'
         expect(src).not_to reek_of(:UtilityFunction)
       end
 
-      it 'should not report UtilityFunction also when using multiple arguments' do
+      it 'does not report UtilityFunction also when using multiple arguments' do
         src = <<-EOS
           class C
             def m1(a) a.to_s; end
@@ -161,22 +161,22 @@ RSpec.describe Reek::Smells::UtilityFunction do
       expect('def simple(arga=local) arga.to_s end').not_to reek_of(:UtilityFunction)
     end
 
-    it 'should count usages of self' do
+    it 'counts usages of self' do
       expect('def <=>(other) Options[:sort_order].compare(self, other) end').
         not_to reek_of(:UtilityFunction)
     end
 
-    it 'should count self reference within a dstr' do
+    it 'counts self reference within a dstr' do
       expect('def as(alias_name); "#{self} as #{alias_name}".to_sym; end').
         not_to reek_of(:UtilityFunction)
     end
 
-    it 'should count calls to self within a dstr' do
+    it 'counts calls to self within a dstr' do
       expect('def to_sql; "\'#{self.gsub(/\'/, "\'\'")}\'"; end').
         not_to reek_of(:UtilityFunction)
     end
 
-    it 'should report message chain' do
+    it 'reports message chain' do
       src = 'def simple(arga) arga.b.c end'
       expect(src).to reek_of(:UtilityFunction, context: 'simple')
       expect(src).not_to reek_of(:FeatureEnvy)
@@ -190,7 +190,7 @@ RSpec.describe Reek::Smells::UtilityFunction do
       expect('def child(arg) super(arg * 2); arg.to_s; end').not_to reek_of(:UtilityFunction)
     end
 
-    it 'should recognise a deep call' do
+    it 'recognises a deep call' do
       src = <<-EOS
         class Red
           def deep(text)
@@ -234,7 +234,7 @@ RSpec.describe Reek::Smells::UtilityFunction do
     end
 
     context 'public methods' do
-      it 'should still report UtilityFunction' do
+      it 'stills report UtilityFunction' do
         src = <<-EOS
           class C
             def m1(a) a.to_s; end
@@ -245,7 +245,7 @@ RSpec.describe Reek::Smells::UtilityFunction do
     end
 
     context 'private methods' do
-      it 'should not report UtilityFunction' do
+      it 'does not report UtilityFunction' do
         src = <<-EOS
           class C
             private
@@ -257,7 +257,7 @@ RSpec.describe Reek::Smells::UtilityFunction do
     end
 
     context 'protected methods' do
-      it 'should not report UtilityFunction' do
+      it 'does not report UtilityFunction' do
         src = <<-EOS
           class C
             protected

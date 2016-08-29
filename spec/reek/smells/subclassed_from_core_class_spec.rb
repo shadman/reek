@@ -17,7 +17,7 @@ RSpec.describe Reek::Smells::SubclassedFromCoreClass do
   end
 
   context 'class inside a module' do
-    it 'should report the core class in the message' do
+    it 'reports the core class in the message' do
       src = <<-EOS
             module Namespace
               class Dummy < Hash
@@ -35,19 +35,19 @@ RSpec.describe Reek::Smells::SubclassedFromCoreClass do
       end
     EOS
 
-    expect(src).to_not reek_of(:SubclassedFromCoreClass)
+    expect(src).not_to reek_of(:SubclassedFromCoreClass)
   end
 
-  it 'should not report on coincidental core class names in other namespaces' do
+  it 'does not report on coincidental core class names in other namespaces' do
     src = <<-EOS
       class Dummy < My::Array
       end
     EOS
 
-    expect(src).to_not reek_of(:SubclassedFromCoreClass)
+    expect(src).not_to reek_of(:SubclassedFromCoreClass)
   end
 
-  it 'should report if we inherit from a core class from within a namespaced class' do
+  it 'reports if we inherit from a core class from within a namespaced class' do
     src = <<-EOS
       module Namespace
         class Dummy < Array
@@ -58,12 +58,12 @@ RSpec.describe Reek::Smells::SubclassedFromCoreClass do
     expect(src).to reek_of(:SubclassedFromCoreClass, ancestor: 'Array')
   end
 
-  it 'should report if we inherit from a core class using Class#new' do
+  it 'reports if we inherit from a core class using Class#new' do
     src = 'Dummy = Class.new(Array)'
     expect(src).to reek_of(:SubclassedFromCoreClass, ancestor: 'Array')
   end
 
-  it 'should report if inner class inherit from a core class' do
+  it 'reports if inner class inherit from a core class' do
     src = <<-EOS
       module Namespace
         class Dummy
@@ -75,7 +75,7 @@ RSpec.describe Reek::Smells::SubclassedFromCoreClass do
     expect(src).to reek_of(:SubclassedFromCoreClass, ancestor: 'Array')
   end
 
-  it 'should not report on coincidental core class names in other namespaces' do
+  it 'does not report on coincidental core class names in other namespaces' do
     src = <<-EOS
       module Namespace
         class Dummy
@@ -84,10 +84,10 @@ RSpec.describe Reek::Smells::SubclassedFromCoreClass do
       end
     EOS
 
-    expect(src).to_not reek_of(:SubclassedFromCoreClass)
+    expect(src).not_to reek_of(:SubclassedFromCoreClass)
   end
 
-  it 'should not report if inner class inherits from allowed classes' do
+  it 'does not report if inner class inherits from allowed classes' do
     src = <<-EOS
       module Namespace
         class Dummy
@@ -96,10 +96,10 @@ RSpec.describe Reek::Smells::SubclassedFromCoreClass do
       end
     EOS
 
-    expect(src).to_not reek_of(:SubclassedFromCoreClass)
+    expect(src).not_to reek_of(:SubclassedFromCoreClass)
   end
 
-  it 'should not report if class is created with Struct.new' do
+  it 'does not report if class is created with Struct.new' do
     src = <<-EOS
       module Namespace
         class Dummy
@@ -108,10 +108,10 @@ RSpec.describe Reek::Smells::SubclassedFromCoreClass do
       end
     EOS
 
-    expect(src).to_not reek_of(:SubclassedFromCoreClass)
+    expect(src).not_to reek_of(:SubclassedFromCoreClass)
   end
 
-  it 'should only report classes created with Class.new' do
+  it 'onlies report classes created with Class.new' do
     src = <<-EOS
       module Namespace
         class Dummy
@@ -120,6 +120,6 @@ RSpec.describe Reek::Smells::SubclassedFromCoreClass do
       end
     EOS
 
-    expect(src).to_not reek_of(:SubclassedFromCoreClass)
+    expect(src).not_to reek_of(:SubclassedFromCoreClass)
   end
 end

@@ -37,7 +37,7 @@ RSpec.describe Reek::Smells::PrimaDonnaMethod do
                            name:  :m2!)
   end
 
-  it 'should report nothing when method and bang counterpart exist' do
+  it 'reports nothing when method and bang counterpart exist' do
     src = <<-EOS
       class C
         def m

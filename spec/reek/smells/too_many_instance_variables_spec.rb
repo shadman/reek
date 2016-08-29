@@ -21,7 +21,7 @@ RSpec.describe Reek::Smells::TooManyInstanceVariables do
   end
 
   context 'counting instance variables' do
-    it 'should not report for non-excessive ivars' do
+    it 'does not report for non-excessive ivars' do
       src = <<-EOS
         class Alfa
           def bravo
@@ -60,7 +60,7 @@ RSpec.describe Reek::Smells::TooManyInstanceVariables do
       expect(src).not_to reek_of(:TooManyInstanceVariables)
     end
 
-    it 'should not report memoized bravo' do
+    it 'does not report memoized bravo' do
       src = <<-EOS
         class Alfa
           def bravo
@@ -73,7 +73,7 @@ RSpec.describe Reek::Smells::TooManyInstanceVariables do
       expect(src).not_to reek_of(:TooManyInstanceVariables)
     end
 
-    it 'should not count bravo on inner classes altogether' do
+    it 'does not count bravo on inner classes altogether' do
       src = <<-EOS
         class Alfa
           class Bravo
@@ -93,7 +93,7 @@ RSpec.describe Reek::Smells::TooManyInstanceVariables do
       expect(src).not_to reek_of(:TooManyInstanceVariables)
     end
 
-    it 'should not count bravo on modules altogether' do
+    it 'does not count bravo on modules altogether' do
       src = <<-EOS
         class Alfa
           class Bravo
@@ -129,7 +129,7 @@ RSpec.describe Reek::Smells::TooManyInstanceVariables do
       expect(src).to reek_of(:TooManyInstanceVariables)
     end
 
-    it 'should not report for ivars in 2 extensions' do
+    it 'does not report for ivars in 2 extensions' do
       src = <<-EOS
         class Alfa
           def bravo

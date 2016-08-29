@@ -63,7 +63,7 @@ RSpec.describe Reek::Smells::TooManyStatements do
     expect(src).not_to reek_of(:TooManyStatements).with_config(config)
   end
 
-  it 'should not report initialize' do
+  it 'does not report initialize' do
     src = <<-EOS
       class Alfa
         def initialize
@@ -77,7 +77,7 @@ RSpec.describe Reek::Smells::TooManyStatements do
     expect(src).not_to reek_of(:TooManyStatements).with_config(config)
   end
 
-  it 'should report long inner block' do
+  it 'reports long inner block' do
     src = <<-EOS
       def long
         self.each do |x|

@@ -5,7 +5,7 @@ RSpec.describe Reek::Spec::ShouldReekOnlyOf do
   let(:examiner) { double('examiner').as_null_object }
   let(:expected_context_name) { 'SmellyClass#big_method' }
   let(:expected_smell_type) { :NestedIterators }
-  let(:matcher) { Reek::Spec::ShouldReekOnlyOf.new(expected_smell_type) }
+  let(:matcher) { described_class.new(expected_smell_type) }
   let(:matcher_matches) { matcher.matches_examiner?(examiner) }
 
   before do

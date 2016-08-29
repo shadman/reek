@@ -37,16 +37,16 @@ RSpec.describe Reek::Smells::LongParameterList do
                            context: 'Dummy#m2')
   end
 
-  it 'should report nothing for 3 parameters' do
+  it 'reports nothing for 3 parameters' do
     expect('def m(a, b, c); end').not_to reek_of(:LongParameterList)
   end
 
-  it 'should not count an optional block' do
+  it 'does not count an optional block' do
     src = 'def m(a, b, c, &block); end'
     expect(src).not_to reek_of(:LongParameterList)
   end
 
-  it 'should not report inner block with too many parameters' do
+  it 'does not report inner block with too many parameters' do
     src = <<-EOS
       def m(f)
         f.each { |a, b, c, d| }
@@ -56,12 +56,12 @@ RSpec.describe Reek::Smells::LongParameterList do
     expect(src).not_to reek_of(:LongParameterList)
   end
 
-  it 'should report 4 parameters' do
+  it 'reports 4 parameters' do
     src = 'def m(a, b, c, d); end'
     expect(src).to reek_of(:LongParameterList, count: 4)
   end
 
-  it 'should report 4 parameters with default parameters' do
+  it 'reports 4 parameters with default parameters' do
     src = 'def m(a = 1, b = 2, c = 3, d = 4); end'
     expect(src).to reek_of(:LongParameterList, count: 4)
   end

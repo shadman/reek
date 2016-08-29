@@ -122,11 +122,11 @@ RSpec.describe Reek::Smells::SmellWarning do
       let(:smell_type) { 'FeatureEnvy' }
       let(:source) { 'a/ruby/source/file.rb' }
       let(:yaml) do
-        warning = Reek::Smells::SmellWarning.new(detector, source: source,
-                                                           context: context_name,
-                                                           lines: lines,
-                                                           message: message,
-                                                           parameters: parameters)
+        warning = described_class.new(detector, source: source,
+                                                context: context_name,
+                                                lines: lines,
+                                                message: message,
+                                                parameters: parameters)
         warning.yaml_hash
       end
 

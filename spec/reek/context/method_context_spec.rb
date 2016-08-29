@@ -2,21 +2,21 @@ require_relative '../../spec_helper'
 require_lib 'reek/context/method_context'
 
 RSpec.describe Reek::Context::MethodContext do
-  let(:method_context) { Reek::Context::MethodContext.new(nil, exp) }
+  let(:method_context) { described_class.new(nil, exp) }
 
   describe '#matches?' do
     let(:exp) { double('exp').as_null_object }
 
-    before :each do
+    before do
       expect(exp).to receive(:full_name).at_least(:once).and_return('mod')
     end
 
-    it 'should recognise itself in a collection of names' do
+    it 'recognises itself in a collection of names' do
       expect(method_context.matches?(['banana', 'mod'])).to eq(true)
       expect(method_context.matches?(['banana'])).to eq(false)
     end
 
-    it 'should recognise itself in a collection of REs' do
+    it 'recognises itself in a collection of REs' do
       expect(method_context.matches?([/banana/, /mod/])).to eq(true)
       expect(method_context.matches?([/banana/])).to eq(false)
     end

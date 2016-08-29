@@ -40,7 +40,7 @@ RSpec.describe Reek::Smells::LongYieldList do
                            context: 'Dummy#m2')
   end
 
-  it 'should not report yield with no parameters' do
+  it 'does not report yield with no parameters' do
     src = <<-EOS
       def m
         yield
@@ -50,7 +50,7 @@ RSpec.describe Reek::Smells::LongYieldList do
     expect(src).not_to reek_of(:LongYieldList)
   end
 
-  it 'should not report yield with 3 parameters' do
+  it 'does not report yield with 3 parameters' do
     src = <<-EOS
       def m(a, b, c)
         yield a, b, c
@@ -60,7 +60,7 @@ RSpec.describe Reek::Smells::LongYieldList do
     expect(src).not_to reek_of(:LongYieldList)
   end
 
-  it 'should report yield with 4 parameters' do
+  it 'reports yield with 4 parameters' do
     src = <<-EOS
       def m(a, b, c, d)
         yield a, b, c, d

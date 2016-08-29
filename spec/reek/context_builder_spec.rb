@@ -368,7 +368,7 @@ RSpec.describe Reek::ContextBuilder do
       EOS
 
       syntax_tree = Reek::Source::SourceCode.from(src).syntax_tree
-      context_tree = Reek::ContextBuilder.new(syntax_tree).context_tree
+      context_tree = described_class.new(syntax_tree).context_tree
 
       class_node = context_tree.children.first
       start_method = class_node.children.first
@@ -390,7 +390,7 @@ RSpec.describe Reek::ContextBuilder do
       EOS
 
       syntax_tree = Reek::Source::SourceCode.from(src).syntax_tree
-      context_tree = Reek::ContextBuilder.new(syntax_tree).context_tree
+      context_tree = described_class.new(syntax_tree).context_tree
 
       class_context = context_tree.children.first
       method_context = class_context.children.first
@@ -410,7 +410,7 @@ RSpec.describe Reek::ContextBuilder do
       EOS
 
       syntax_tree = Reek::Source::SourceCode.from(src).syntax_tree
-      context_tree = Reek::ContextBuilder.new(syntax_tree).context_tree
+      context_tree = described_class.new(syntax_tree).context_tree
 
       class_context = context_tree.children.first
       foo_context = class_context.children.first
@@ -431,7 +431,7 @@ RSpec.describe Reek::ContextBuilder do
       EOS
 
       syntax_tree = Reek::Source::SourceCode.from(src).syntax_tree
-      context_tree = Reek::ContextBuilder.new(syntax_tree).context_tree
+      context_tree = described_class.new(syntax_tree).context_tree
 
       class_context = context_tree.children.first
       foo_context = class_context.children.first

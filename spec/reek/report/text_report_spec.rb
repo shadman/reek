@@ -13,7 +13,7 @@ RSpec.describe Reek::Report::TextReport do
       heading_formatter: Reek::Report::HeadingFormatter::Quiet
     }
   end
-  let(:instance) { Reek::Report::TextReport.new report_options }
+  let(:instance) { described_class.new report_options }
 
   context 'with a single empty source' do
     before do
@@ -21,7 +21,7 @@ RSpec.describe Reek::Report::TextReport do
     end
 
     it 'has an empty quiet_report' do
-      expect { instance.show }.to_not output.to_stdout
+      expect { instance.show }.not_to output.to_stdout
     end
   end
 
@@ -32,7 +32,7 @@ RSpec.describe Reek::Report::TextReport do
     end
 
     context 'with colors disabled' do
-      before :each do
+      before do
         Rainbow.enabled = false
       end
 
@@ -42,7 +42,7 @@ RSpec.describe Reek::Report::TextReport do
     end
 
     context 'with colors enabled' do
-      before :each do
+      before do
         Rainbow.enabled = true
       end
 
@@ -67,7 +67,7 @@ RSpec.describe Reek::Report::TextReport do
         expect { instance.show }.to output(/string -- 2 warnings/).to_stdout
       end
 
-      it 'should mention every smell name' do
+      it 'mentions every smell name' do
         expect { instance.show }.to output(/UncommunicativeParameterName/).to_stdout
         expect { instance.show }.to output(/UtilityFunction/).to_stdout
       end
