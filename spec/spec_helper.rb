@@ -93,6 +93,8 @@ RSpec.configure do |config|
   end
 end
 
+RSpec::Matchers.define_negated_matcher :not_reek_of, :reek_of
+
 private
 
 def require_lib(path)

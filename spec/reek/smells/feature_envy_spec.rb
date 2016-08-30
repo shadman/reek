@@ -1,8 +1,6 @@
 require_relative '../../spec_helper'
 require_lib 'reek/smells/feature_envy'
 
-RSpec::Matchers.define_negated_matcher :not_reek_of, :reek_of
-
 RSpec.describe Reek::Smells::FeatureEnvy do
   it 'reports the right values' do
     src = <<-EOS
