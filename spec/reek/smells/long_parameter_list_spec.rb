@@ -29,16 +29,14 @@ RSpec.describe Reek::Smells::LongParameterList do
       end
     EOS
 
-    expect(src).to reek_of(:LongParameterList,
-                           lines:   [2],
-                           context: 'Dummy#m1')
-    expect(src).to reek_of(:LongParameterList,
-                           lines:   [5],
-                           context: 'Dummy#m2')
+    expect(src).
+      to reek_of(:LongParameterList, lines: [2], context: 'Dummy#m1').
+      and reek_of(:LongParameterList, lines: [5], context: 'Dummy#m2')
   end
 
   it 'reports nothing for 3 parameters' do
-    expect('def m(a, b, c); end').not_to reek_of(:LongParameterList)
+    src = 'def m(a, b, c); end'
+    expect(src).not_to reek_of(:LongParameterList)
   end
 
   it 'does not count an optional block' do
