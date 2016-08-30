@@ -99,15 +99,14 @@ RSpec.describe Reek::Smells::SmellWarning do
   end
 
   context '#yaml_hash' do
-    let(:class) { 'FeatureEnvy' }
     let(:context_name) { 'Module::Class#method/block' }
     let(:lines) { [24, 513] }
     let(:message) { 'test message' }
-
     let(:detector) { Reek::Smells::FeatureEnvy.new }
     let(:parameters) { { 'one' => 34, 'two' => 'second' } }
     let(:smell_type) { 'FeatureEnvy' }
     let(:source) { 'a/ruby/source/file.rb' }
+
     let(:yaml) do
       warning = described_class.new(detector, source: source,
                                               context: context_name,
@@ -133,12 +132,10 @@ RSpec.describe Reek::Smells::SmellWarning do
       expect(yaml['lines']).to match_array lines
     end
 
-    it 'includes the smell type' do
-      expect(yaml['smell_type']).to eq smell_type
-    end
     it 'includes the source' do
       expect(yaml['source']).to eq source
     end
+
     it 'includes the parameters' do
       parameters.each do |key, value|
         expect(yaml[key]).to eq value
