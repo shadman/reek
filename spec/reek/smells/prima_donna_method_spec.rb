@@ -29,12 +29,9 @@ RSpec.describe Reek::Smells::PrimaDonnaMethod do
       end
     EOS
 
-    expect(src).to reek_of(:PrimaDonnaMethod,
-                           lines: [1],
-                           name:  :m1!)
-    expect(src).to reek_of(:PrimaDonnaMethod,
-                           lines: [1],
-                           name:  :m2!)
+    expect(src).
+      to reek_of(:PrimaDonnaMethod, lines: [1], name: :m1!).
+      and reek_of(:PrimaDonnaMethod, lines: [1], name: :m2!)
   end
 
   it 'reports nothing when method and bang counterpart exist' do

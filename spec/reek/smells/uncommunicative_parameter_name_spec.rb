@@ -24,12 +24,9 @@ RSpec.describe Reek::Smells::UncommunicativeParameterName do
       end
     EOS
 
-    expect(src).to reek_of(:UncommunicativeParameterName,
-                           lines: [1],
-                           name:  'x')
-    expect(src).to reek_of(:UncommunicativeParameterName,
-                           lines: [1],
-                           name:  'y')
+    expect(src).
+      to reek_of(:UncommunicativeParameterName, lines: [1], name: 'x').
+      and reek_of(:UncommunicativeParameterName, lines: [1], name: 'y')
   end
 
   { 'alfa.' => 'with a receiver',

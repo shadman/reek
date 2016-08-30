@@ -31,12 +31,9 @@ RSpec.describe Reek::Smells::ManualDispatch do
       end
     EOS
 
-    expect(src).to reek_of(:ManualDispatch,
-                           lines:   [3],
-                           context: 'Dummy#m1')
-    expect(src).to reek_of(:ManualDispatch,
-                           lines:   [7],
-                           context: 'Dummy#m2')
+    expect(src).
+      to reek_of(:ManualDispatch, lines: [3], context: 'Dummy#m1').
+      and reek_of(:ManualDispatch, lines: [7], context: 'Dummy#m2')
   end
 
   it 'reports manual dispatch smell when using #respond_to? on implicit self' do
