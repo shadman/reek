@@ -8,18 +8,18 @@ RSpec.describe Reek::Smells::TooManyStatements do
 
   it 'reports the right values' do
     src = <<-EOS
-      class Dummy
-        def m
-          a = 1
-          b = 2
-          c = 3
+      class Alfa
+        def bravo
+          charlie = 1
+          delta   = 2
+          echo    = 3
         end
       end
     EOS
 
     expect(src).to reek_of(:TooManyStatements,
                            lines:   [2],
-                           context: 'Dummy#m',
+                           context: 'Alfa#bravo',
                            message: 'has approx 3 statements',
                            source:  'string',
                            count:   3).with_config(config)
@@ -27,35 +27,35 @@ RSpec.describe Reek::Smells::TooManyStatements do
 
   it 'does count all occurences' do
     src = <<-EOS
-      class Dummy
-        def m1
-          a = 1
-          b = 2
-          c = 3
+      class Alfa
+        def bravo
+          charlie = 1
+          delta   = 2
+          echo    = 3
         end
 
-        def m2
-          x = 1
-          y = 2
-          z = 3
+        def foxtrot
+          golf  = 1
+          hotel = 2
+          india = 3
         end
       end
     EOS
 
     expect(src).to reek_of(:TooManyStatements,
                            lines:   [2],
-                           context: 'Dummy#m1').with_config(config)
+                           context: 'Alfa#bravo').with_config(config)
     expect(src).to reek_of(:TooManyStatements,
                            lines:   [8],
-                           context: 'Dummy#m2').with_config(config)
+                           context: 'Alfa#foxtrot').with_config(config)
   end
 
   it 'does not report short methods' do
     src = <<-EOS
-      class Dummy
-        def m
-          a = 1
-          b = 2
+      class Alfa
+        def bravo
+          charlie = 1
+          delta   = 2
         end
       end
     EOS
@@ -65,11 +65,11 @@ RSpec.describe Reek::Smells::TooManyStatements do
 
   it 'should not report initialize' do
     src = <<-EOS
-      class Dummy
+      class Alfa
         def initialize
-          a = 1
-          b = 2
-          c = 3
+          charlie = 1
+          delta   = 2
+          echo    = 3
         end
       end
     EOS
@@ -81,9 +81,9 @@ RSpec.describe Reek::Smells::TooManyStatements do
     src = <<-EOS
       def long
         self.each do |x|
-          x = 1
-          x = 2
-          x = 3
+          charlie = 1
+          delta   = 2
+          echo    = 3
         end
       end
     EOS

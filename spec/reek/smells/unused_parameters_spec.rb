@@ -82,7 +82,6 @@ RSpec.describe Reek::Smells::UnusedParameters do
       expect('def alfa(_); end').not_to reek_of(:UnusedParameters)
     end
 
-
     it 'reports nothing for unused anonymous splatted parameter' do
       expect('def alfa(*); end').not_to reek_of(:UnusedParameters)
     end

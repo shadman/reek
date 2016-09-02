@@ -46,10 +46,10 @@ RSpec.describe Reek::Smells::UncommunicativeMethodName do
   end
 
   describe '`reject` patterns' do
-    let(:source) { 'def helper; end' }
+    let(:source) { 'def alfa; end' }
 
     it 'reject smelly names via regex / strings given by list / literal' do
-      [[/helper/], /helper/, ['helper'], 'helper'].each do |pattern|
+      [[/alfa/], /alfa/, ['alfa'], 'alfa'].each do |pattern|
         expect(source).to reek_of(:UncommunicativeMethodName).with_config('reject' => pattern)
       end
     end

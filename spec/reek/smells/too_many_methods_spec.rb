@@ -8,17 +8,17 @@ RSpec.describe Reek::Smells::TooManyMethods do
 
   it 'reports the right values' do
     src = <<-EOS
-      class Dummy
-        def m1; end
-        def m2; end
-        def m3; end
-        def m4; end
+      class Alfa
+        def bravo; end
+        def charlie; end
+        def delta; end
+        def echo; end
       end
     EOS
 
     expect(src).to reek_of(:TooManyMethods,
                            lines:   [1],
-                           context: 'Dummy',
+                           context: 'Alfa',
                            message: 'has at least 4 methods',
                            source:  'string',
                            count:   4).with_config(config)
@@ -26,23 +26,24 @@ RSpec.describe Reek::Smells::TooManyMethods do
 
   it 'should not report if we stay below max_methods' do
     src = <<-EOS
-      class Dummy
-        def m1; end
-        def m2; end
-        def m3; end
+      class Alfa
+        def bravo; end
+        def charlie; end
+        def delta; end
       end
     EOS
+
     expect(src).not_to reek_of(:TooManyMethods).with_config(config)
   end
 
   it 'stops at a nested module' do
     src = <<-EOS
-      class Dummy
-        def m1; end
-        def m2; end
+      class Alfa
+        def bravo; end
+        def charlie; end
         module Hidden
-          def m3; end
-          def m4; end
+          def delta; end
+          def echo; end
         end
       end
     EOS

@@ -4,22 +4,22 @@ require_lib 'reek/smells/uncommunicative_module_name'
 RSpec.describe Reek::Smells::UncommunicativeModuleName do
   it 'reports the right values' do
     src = <<-EOS
-      class D
+      class K
       end
     EOS
 
     expect(src).to reek_of(:UncommunicativeModuleName,
                            lines:   [1],
-                           context: 'D',
-                           message: "has the name 'D'",
+                           context: 'K',
+                           message: "has the name 'K'",
                            source:  'string',
-                           name:    'D')
+                           name:    'K')
   end
 
   describe 'default configuration' do
     ['class', 'module'].each do |type|
       it 'does not report one-word name' do
-        expect("#{type} Helper; end").not_to reek_of(:UncommunicativeModuleName)
+        expect("#{type} Alfa; end").not_to reek_of(:UncommunicativeModuleName)
       end
 
       it 'reports one-letter name' do
@@ -31,26 +31,26 @@ RSpec.describe Reek::Smells::UncommunicativeModuleName do
       end
 
       it 'reports long name ending in a number' do
-        expect("#{type} Printer2; end").to reek_of(:UncommunicativeModuleName, name: 'Printer2')
+        expect("#{type} Alfa2; end").to reek_of(:UncommunicativeModuleName, name: 'Alfa2')
       end
     end
   end
 
   describe '`accept` patterns' do
-    let(:source) { 'class Classy1; end' }
+    let(:source) { 'class Alfa1; end' }
 
     it 'make smelly names pass via regex / strings given by list / literal' do
-      [[/lassy/], /lassy/, ['lassy'], 'lassy'].each do |pattern|
+      [[/lfa/], /lfa/, ['lfa'], 'lfa'].each do |pattern|
         expect(source).to_not reek_of(:UncommunicativeModuleName).with_config('accept' => pattern)
       end
     end
   end
 
   describe '`reject` patterns' do
-    let(:source) { 'class BaseHelper; end' }
+    let(:source) { 'class Alfa; end' }
 
     it 'reject smelly names via regex / strings given by list / literal' do
-      [[/Helper/], /Helper/, ['Helper'], 'Helper'].each do |pattern|
+      [[/Alfa/], /Alfa/, ['Alfa'], 'Alfa'].each do |pattern|
         expect(source).to reek_of(:UncommunicativeModuleName).with_config('reject' => pattern)
       end
     end
