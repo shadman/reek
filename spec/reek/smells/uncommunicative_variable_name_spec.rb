@@ -4,33 +4,33 @@ require_lib 'reek/smells/uncommunicative_variable_name'
 RSpec.describe Reek::Smells::UncommunicativeVariableName do
   it 'reports the right values' do
     src = <<-EOS
-      def m
-        x = 5
+      def alfa
+        bravo = 5
       end
     EOS
 
     expect(src).to reek_of(:UncommunicativeVariableName,
                            lines:   [2],
-                           context: 'm',
-                           message: "has the variable name 'x'",
+                           context: 'alfa',
+                           message: "has the variable name 'bravo'",
                            source:  'string',
-                           name:    'x')
+                           name:    'bravo')
   end
 
   it 'does count all occurences' do
     src = <<-EOS
-      def m
-        a = 3
-        b = 7
+      def alfa
+        bravo = 3
+        charlie = 7
       end
     EOS
 
     expect(src).to reek_of(:UncommunicativeVariableName,
                            lines: [2],
-                           name:  'a')
+                           name:  'bravo')
     expect(src).to reek_of(:UncommunicativeVariableName,
                            lines: [3],
-                           name:  'b')
+                           name:  'charlie')
   end
 
   context 'field name' do

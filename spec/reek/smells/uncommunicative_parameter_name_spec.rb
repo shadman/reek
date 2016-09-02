@@ -4,101 +4,92 @@ require_lib 'reek/smells/uncommunicative_parameter_name'
 RSpec.describe Reek::Smells::UncommunicativeParameterName do
   it 'reports the right values' do
     src = <<-EOS
-      def m(a)
-        a
+      def alfa(x)
+        x
       end
     EOS
 
     expect(src).to reek_of(:UncommunicativeParameterName,
                            lines:   [1],
-                           context: 'm',
-                           message: "has the parameter name 'a'",
+                           context: 'alfa',
+                           message: "has the parameter name 'x'",
                            source:  'string',
-                           name:    'a')
+                           name:    'x')
   end
 
   it 'does count all occurences' do
     src = <<-EOS
-      def m(a, b)
-        [a, b]
+      def alfa(x, y)
+        [x, y]
       end
     EOS
 
     expect(src).to reek_of(:UncommunicativeParameterName,
                            lines: [1],
-                           name:  'a')
+                           name:  'x')
     expect(src).to reek_of(:UncommunicativeParameterName,
                            lines: [1],
-                           name:  'b')
+                           name:  'y')
   end
 
-  { 'obj.' => 'with a receiver',
+  { 'alfa.' => 'with a receiver',
     '' => 'without a receiver' }.each do |host, description|
     context "in a method definition #{description}" do
       it 'does not recognise *' do
-        expect("def #{host}help(xray, *) basics(17) end").
-          not_to reek_of(:UncommunicativeParameterName)
-      end
-
-      it "reports parameter's name" do
-        src = "def #{host}help(x) basics(x) end"
-        expect(src).to reek_of(:UncommunicativeParameterName,
-                               name: 'x')
+        expect("def #{host}bravo(*); end").not_to reek_of(:UncommunicativeParameterName)
       end
 
       it 'does not report unused parameters' do
-        src = "def #{host}help(x) basics(17) end"
+        src = "def #{host}bravo(x); charlie; end"
         expect(src).not_to reek_of(:UncommunicativeParameterName)
       end
 
       it 'does not report two-letter parameter names' do
-        expect("def #{host}help(ab) basics(ab) end").
-          not_to reek_of(:UncommunicativeParameterName)
+        src = "def #{host}bravo(ab); charlie(ab); end"
+        expect(src).not_to reek_of(:UncommunicativeParameterName)
       end
 
       it 'reports names of the form "x2"' do
-        src = "def #{host}help(x2) basics(x2) end"
-        expect(src).to reek_of(:UncommunicativeParameterName,
-                               name: 'x2')
+        src = "def #{host}bravo(x2) charlie(x2) end"
+        expect(src).to reek_of(:UncommunicativeParameterName, name: 'x2')
       end
 
       it 'reports long name ending in a number' do
-        src = "def #{host}help(param2) basics(param2) end"
-        expect(src).to reek_of(:UncommunicativeParameterName,
-                               name: 'param2')
+        src = "def #{host}bravo(param2) charlie(param2) end"
+        expect(src).to reek_of(:UncommunicativeParameterName, name: 'param2')
       end
 
       it 'does not report unused anonymous parameter' do
-        expect("def #{host}help(_) basics(17) end").
-          not_to reek_of(:UncommunicativeParameterName)
+        src = "def #{host}bravo(_); charlie; end"
+        expect(src).not_to reek_of(:UncommunicativeParameterName)
       end
 
       it 'reports used anonymous parameter' do
-        expect("def #{host}help(_) basics(_) end").
-          to reek_of(:UncommunicativeParameterName)
+        src = "def #{host}bravo(_); charlie(_) end"
+        expect(src).to reek_of(:UncommunicativeParameterName)
       end
 
       it 'reports used parameters marked as unused' do
-        expect("def #{host}help(_unused) basics(_unused) end").
-          to reek_of(:UncommunicativeParameterName)
+        src = "def #{host}bravo(_unused) charlie(_unused) end"
+        expect(src).to reek_of(:UncommunicativeParameterName)
       end
 
       it 'reports names inside array decomposition' do
-        src = "def #{host}help((b, nice)) basics(b, nice) end"
+        src = "def #{host}bravo((x, charlie)) delta(x, charlie) end"
         expect(src).to reek_of(:UncommunicativeParameterName,
-                               name: 'b')
+                               name: 'x')
       end
 
       it 'reports names inside nested array decomposition' do
-        src = "def #{host}help((foo, (bar, c))) basics(foo, c) end"
+        src = "def #{host}bravo((charlie, (delta, x))) echo(charlie, x) end"
         expect(src).to reek_of(:UncommunicativeParameterName,
-                               name: 'c')
+                               name: 'x')
       end
     end
   end
 
   describe '`accept` patterns' do
-    let(:source) { 'def foo(bar2); baz(bar2); end' }
+    let(:source) { 'def alfa(bar2); charlie(bar2); end' }
 
     it 'make smelly names pass via regex / strings given by list / literal' do
       [[/bar2/], /bar2/, ['bar2'], 'bar2'].each do |pattern|
@@ -108,10 +99,10 @@ RSpec.describe Reek::Smells::UncommunicativeParameterName do
   end
 
   describe '`reject` patterns' do
-    let(:source) { 'def foo(bar); baz(bar); end' }
+    let(:source) { 'def alfa(bravo); charlie(bravo); end' }
 
     it 'reject smelly names via regex / strings given by list / literal' do
-      [[/bar/], /bar/, ['bar'], 'bar'].each do |pattern|
+      [[/bravo/], /bravo/, ['bravo'], 'bravo'].each do |pattern|
         expect(source).to reek_of(:UncommunicativeParameterName).with_config('reject' => pattern)
       end
     end

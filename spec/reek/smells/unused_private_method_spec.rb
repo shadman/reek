@@ -4,130 +4,144 @@ require_lib 'reek/smells/unused_private_method'
 RSpec.describe Reek::Smells::UnusedPrivateMethod do
   it 'reports the right values' do
     src = <<-EOS
-      class Dummy
+      class Alfa
         private
 
-        def m
+        def charlie
         end
       end
     EOS
 
     expect(src).to reek_of(:UnusedPrivateMethod,
                            lines:   [4],
-                           context: 'Dummy',
-                           message: 'has the unused private instance method `m`',
+                           context: 'Alfa',
+                           message: 'has the unused private instance method `charlie`',
                            source:  'string',
-                           name:    :m)
+                           name:    :charlie)
   end
 
   it 'does count all occurences' do
     src = <<-EOS
-      class Dummy
+      class Alfa
         private
 
-        def m1
+        def charlie
         end
 
-        def m2
+        def charlie
         end
       end
     EOS
 
     expect(src).to reek_of(:UnusedPrivateMethod,
                            lines: [4],
-                           name:  :m1)
+                           name:  :charlie)
     expect(src).to reek_of(:UnusedPrivateMethod,
                            lines: [7],
-                           name:  :m2)
+                           name:  :charlie)
   end
 
   context 'unused private methods' do
     it 'reports instance methods' do
       source = <<-EOF
-        class Car
+        class Alfa
           private
-          def start; end
-          def drive; end
+          def charlie; end
+          def charlie; end
         end
       EOF
 
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :start)
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :drive)
+      expect(source).to reek_of(:UnusedPrivateMethod, name: :charlie)
+      expect(source).to reek_of(:UnusedPrivateMethod, name: :charlie)
     end
 
     it 'reports instance methods in the correct class' do
       source = <<-EOF
-        class Car
-          class Engine
+        class Alfa
+          class Bravo
             private
-            def start; end
+            def charlie; end
           end
         end
       EOF
 
-      expect(source).to reek_of(:UnusedPrivateMethod, context: 'Car::Engine', name: :start)
-      expect(source).not_to reek_of(:UnusedPrivateMethod, context: 'Car', name: :start)
+      expect(source).to reek_of(:UnusedPrivateMethod,
+                                context: 'Alfa::Bravo',
+                                name: :charlie)
+      expect(source).not_to reek_of(:UnusedPrivateMethod,
+                                    context: 'Alfa',
+                                    name: :charlie)
     end
 
     it 'discounts calls to identically named methods in nested classes' do
       source = <<-EOF
-        class Car
-          class Engine
-            def vroom
-              start
+        class Alfa
+          class Bravo
+            def bravo
+              charlie
             end
+
             private
-            def start; end
+            def charlie; end
           end
+
           private
-          def start; end
+          def charlie; end
         end
       EOF
 
-      expect(source).not_to reek_of(:UnusedPrivateMethod, context: 'Car::Engine', name: :start)
-      expect(source).to reek_of(:UnusedPrivateMethod, context: 'Car', name: :start)
+      expect(source).not_to reek_of(:UnusedPrivateMethod,
+                                    context: 'Alfa::Bravo',
+                                    name: :charlie)
+      expect(source).to reek_of(:UnusedPrivateMethod,
+                                context: 'Alfa',
+                                name: :charlie)
     end
 
     it 'creates warnings correctly' do
       source = <<-EOF
-        class Car
+        class Alfa
           private
-          def start; end
-          def drive; end
+          def bravo; end
+          def charlie; end
         end
       EOF
 
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :drive, lines: [4])
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :start, lines: [3])
+      expect(source).to reek_of(:UnusedPrivateMethod,
+                                name: :bravo,
+                                lines: [3])
+      expect(source).to reek_of(:UnusedPrivateMethod,
+                                name: :charlie,
+                                lines: [4])
     end
   end
 
   describe 'configuring the detector via source code comment' do
     it 'does not report methods we excluded' do
       source = <<-EOF
-        # :reek:UnusedPrivateMethod: { exclude: [ start ] }
-        class Car
+        # :reek:UnusedPrivateMethod: { exclude: [ bravo ] }
+        class Alfa
           private
-          def start; end
-          def drive; end
+          def bravo; end
+          def charlie; end
         end
       EOF
 
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :drive)
-      expect(source).not_to reek_of(:UnusedPrivateMethod, name: :start)
+      expect(source).to reek_of(:UnusedPrivateMethod, name: :charlie)
+      expect(source).not_to reek_of(:UnusedPrivateMethod, name: :bravo)
     end
   end
 
   context 'used private methods' do
     it 'are not reported' do
       source = <<-EOF
-        class Car
-          def drive
-            start
+        class Alfa
+          def bravo
+            charlie
           end
 
           private
-          def start; end
+          def charlie; end
         end
       EOF
 
@@ -138,9 +152,9 @@ RSpec.describe Reek::Smells::UnusedPrivateMethod do
   context 'unused protected methods' do
     it 'are not reported' do
       source = <<-EOF
-        class Car
+        class Alfa
           protected
-          def start; end
+          def bravo; end
         end
       EOF
 
@@ -151,8 +165,8 @@ RSpec.describe Reek::Smells::UnusedPrivateMethod do
   context 'unused public methods' do
     it 'are not reported' do
       source = <<-EOF
-        class Car
-          def start; end
+        class Alfa
+          def bravo; end
         end
       EOF
 
@@ -163,26 +177,26 @@ RSpec.describe Reek::Smells::UnusedPrivateMethod do
   describe 'prevent methods from being reported' do
     let(:source) do
       <<-EOF
-        class Car
+        class Alfa
           private
-          def start; end
-          def drive; end
+          def bravo; end
+          def charlie; end
         end
       EOF
     end
 
     it 'excludes them via direct match in the app configuration' do
-      config = { Reek::Smells::SmellDetector::EXCLUDE_KEY => ['Car#drive'] }
+      config = { Reek::Smells::SmellDetector::EXCLUDE_KEY => ['Alfa#charlie'] }
 
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :start).with_config(config)
-      expect(source).not_to reek_of(:UnusedPrivateMethod, name: :drive).with_config(config)
+      expect(source).to reek_of(:UnusedPrivateMethod, name: :bravo).with_config(config)
+      expect(source).not_to reek_of(:UnusedPrivateMethod, name: :charlie).with_config(config)
     end
 
     it 'excludes them via regex in the app configuration' do
-      config = { Reek::Smells::SmellDetector::EXCLUDE_KEY => [/drive/] }
+      config = { Reek::Smells::SmellDetector::EXCLUDE_KEY => [/charlie/] }
 
-      expect(source).to reek_of(:UnusedPrivateMethod, name: :start).with_config(config)
-      expect(source).not_to reek_of(:UnusedPrivateMethod, name: :drive).with_config(config)
+      expect(source).to reek_of(:UnusedPrivateMethod, name: :bravo).with_config(config)
+      expect(source).not_to reek_of(:UnusedPrivateMethod, name: :charlie).with_config(config)
     end
   end
 end
